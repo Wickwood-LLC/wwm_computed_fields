@@ -49,7 +49,7 @@ function computed_field_field_proper_full_name_compute($entity_type_manager, $en
 function computed_field_field_categories($entity_type_manager, $entity, $fields, $delta)
 {
   $tids = array();
-  kint($fields);
+  var_dump($fields);
 
   if ($fields->field_primary_category->target_id) {
     $tids[] = $entity->field_primary_category->target_id;
