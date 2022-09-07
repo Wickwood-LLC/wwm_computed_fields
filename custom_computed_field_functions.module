@@ -54,8 +54,8 @@ function computed_field_field_categories_compute($entity_type_manager, $entity, 
   kint($entity->get('field_primary_category')->target_id);
 
 
-  if ($fields->field_primary_category->target_id) {
-    $tids[] = $entity->field_primary_category->target_id;
+  if ($entity->get('field_primary_category')->target_id) {
+    $tids[] = $entity->get('field_primary_category')->target_id;
   }
 
   kint($tids);
