@@ -57,11 +57,11 @@ function computed_field_field_categories_compute($entity_type_manager, $entity, 
   dpm('The computed_field_field_categories function was called');
 
   $tids = array();
-  dpm('The $fields is:'.$fields);
+  kint('The $fields is:'.$fields);
 
   if ($fields->field_primary_category->target_id) {
     $tids[] = $entity->field_primary_category->target_id;
-    dpm('The $tids is:'.$tids);
+    kint('The $tids is:'.$tids);
   }
 
   if (!empty($entity->field_additional_categories)) {
