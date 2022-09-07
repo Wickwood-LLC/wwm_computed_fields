@@ -63,9 +63,7 @@ function computed_field_field_categories_compute($entity_type_manager, $entity, 
     }
   }
 
-  kint($tids);
+  $value = implode(',', array_unique($tids));
 
-  // $value = implode(',', array_unique($tids));
-
-  // return $value;
+  return $value;
 }
