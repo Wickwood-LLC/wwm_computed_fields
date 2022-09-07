@@ -9,6 +9,8 @@ use Drupal\Core\Entity\EntityInterface;
  */
 function computed_field_field_age_compute($entity_type_manager, $entity, $fields, $delta) {
   
+  dpm('The computed_field_field_full_name_compute function was called');
+  
   if ($entity->field_birthdate->value) {
     $birthdate = date_create_from_format('Y-m-d', date($entity->field_birthdate->value));
     $today = date_create_from_format('Y-m-d', date('Y-m-d'));
@@ -20,6 +22,8 @@ function computed_field_field_age_compute($entity_type_manager, $entity, $fields
 }
 
 function computed_field_field_full_name_compute($entity_type_manager, $entity, $fields, $delta) {
+
+  dpm('The computed_field_field_full_name_compute function was called');
   
   $suffix_terms = $entity->get('field_name_suffix')->referencedEntities();
   $suffix_term = reset($suffix_terms);
@@ -33,6 +37,8 @@ function computed_field_field_full_name_compute($entity_type_manager, $entity, $
 
 function computed_field_field_proper_full_name_compute($entity_type_manager, $entity, $fields, $delta) {
   
+  dpm('The computed_field_field_proper_full_name_compute function was called');
+
   $prefix_terms = $entity->get('field_name_prefix')->referencedEntities();
   $prefix_term = reset($prefix_terms);
   $suffix_terms = $entity->get('field_name_suffix')->referencedEntities();
@@ -48,6 +54,8 @@ function computed_field_field_proper_full_name_compute($entity_type_manager, $en
 
 function computed_field_field_categories($entity_type_manager, $entity, $fields, $delta) {
   
+  dpm('The computed_field_field_categories function was called');
+
   $tids = array();
   dpm('The $fields is:'.$fields);
 
