@@ -18,10 +18,7 @@ function computed_field_field_age_compute($entity_type_manager, $entity, $fields
   return $value;
 }
 
-function computed_field_field_full_name_compute($entity_type_manager, $entity, $fields, $delta) {
-
-  dpm('The computed_field_field_full_name_compute function was called');
-  
+function computed_field_field_full_name_compute($entity_type_manager, $entity, $fields, $delta) {  
   $suffix_terms = $entity->get('field_name_suffix')->referencedEntities();
   $suffix_term = reset($suffix_terms);
   $value = $entity->field_first_name->value
