@@ -3,6 +3,7 @@
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Computed Field Functions.
@@ -63,4 +64,15 @@ function computed_field_field_categories_compute($entity_type_manager, $entity, 
   $value = implode(',', array_unique($tids));
 
   return $value;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave()
+ */
+function custom_computed_field_functions_node_presave(NodeInterface $node) {
+  if ($node->hasField('field_primary_category') && $node->hasField('field_additional_categories') && $node->hasField('field_categories')) {
+    $primary_categories = $node->get('field_primary_category')->getValue();
+    $additional_categories = $node->get('field_additional_categories')->getValue();
+    $node->get('field_categories')->setValue(array_merge($primary_categories, $additional_categories));
+  }
 }
