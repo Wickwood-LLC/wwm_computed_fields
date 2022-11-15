@@ -69,7 +69,7 @@ function computed_field_field_categories_compute($entity_type_manager, $entity, 
 /**
  * Implements hook_ENTITY_TYPE_presave()
  */
-function custom_computed_field_functions_node_presave(NodeInterface $node) {
+function wwm_computed_fields_node_presave(NodeInterface $node) {
   if ($node->hasField('field_primary_category') && $node->hasField('field_additional_categories') && $node->hasField('field_categories')) {
     $primary_categories = $node->get('field_primary_category')->getValue();
     $additional_categories = $node->get('field_additional_categories')->getValue();
