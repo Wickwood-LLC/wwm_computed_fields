@@ -1,5 +1,5 @@
-name: 'Custom Computed Field Functions'
+name: 'WWM Computed Fields'
 type: module
-description: 'Custom logic module for Computed Fields'
+description: 'WWM custom logic module for Computed Fields'
 core_version_requirement: ^8.8 || ^9
 package: 'wwm_computed_fields'
