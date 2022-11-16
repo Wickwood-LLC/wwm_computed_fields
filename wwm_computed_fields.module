@@ -3,7 +3,6 @@
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\node\NodeInterface;
 
 /**
  * Computed Field Functions.
@@ -41,6 +40,12 @@ function computed_field_field_proper_full_name_compute($entity_type_manager, $en
     . " " . $entity->field_last_name->value
     . ($suffix_term ? " " . $suffix_term->label() : '');
 
+  return $value;
+}
+
+// This function computes for the "Contact Full Name", which is used for the Contact Paragraph. This is different from the "Full Name", which is used for the User entity.
+function computed_field_field_contact_full_name_compute($entity_type_manager, $entity, $fields, $delta) {  
+  $value = "{$entity->field_contact_first_name ->value} {$entity->field_contact_last_name->value}";
   return $value;
 }
 
