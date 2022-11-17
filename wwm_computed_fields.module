@@ -49,6 +49,15 @@ function computed_field_field_contact_full_name_compute($entity_type_manager, $e
   return $value;
 }
 
+function computed_field_field_full_contact_details_compute($entity_type_manager, $entity, $fields, $delta) {
+  $value = "{$entity->field_contact_first_name->value} {$entity->field_contact_last_name->value}"
+    . ($entity->field_contact_phone_number->value ? ", {$entity->field_contact_phone_number->value}" : '')
+    . ($entity->field_contact_email->value ? ", {$entity->field_contact_email->value}" : '')
+    . ($entity->field_contact_website->value ? ", {$entity->field_contact_website->value}" : '');
+
+  return $value;
+}
+
 function computed_field_field_categories_compute($entity_type_manager, $entity, $fields, $delta) {
 
   $tids = array();
