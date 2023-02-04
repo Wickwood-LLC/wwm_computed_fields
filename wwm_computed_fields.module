@@ -95,17 +95,3 @@ function wwm_computed_fields_node_presave(NodeInterface $node)
     $node->get('field_categories')->setValue(array_merge($primary_categories, $additional_categories));
   }
 }
-
-function computed_field_field_combined_site_aliases_compute($entity_type_manager, $entity, $fields, $delta)
-{
-  $values = "";
-  if (!empty($entity->field_site_aliases)) {
-    foreach ($entity->field_site_aliases as $alias) {
-      $values .= "{$alias->value}\n";
-    }
-  }
-
-  $value = $values;
-
-  return $value;
-}
