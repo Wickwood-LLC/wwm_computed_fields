@@ -1,5 +1,5 @@
 name: 'WWM Computed Fields'
 type: module
 description: 'WWM custom logic module for Computed Fields'
-core_version_requirement: ^8.8 || ^9
+core_version_requirement: ^9 || ^10
 package: 'wwm_computed_fields'
