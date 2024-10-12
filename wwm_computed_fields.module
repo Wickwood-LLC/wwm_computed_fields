@@ -11,9 +11,8 @@ function computed_field_field_age_compute($entity_type_manager, $entity, $fields
     $today = date_create_from_format('Y-m-d', date('Y-m-d'));
     $diff = (array) date_diff($birthdate, $today);
     $value = $diff['y'];
+    return $value;
   }
-
-  return $value;
 }
 
 function computed_field_field_full_name_compute($entity_type_manager, $entity, $fields, $delta) {  
