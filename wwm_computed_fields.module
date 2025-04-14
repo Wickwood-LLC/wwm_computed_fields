@@ -15,22 +15,37 @@ function computed_field_field_age_compute($entity_type_manager, $entity, $fields
   }
 }
 
-function computed_field_field_full_name_compute($entity_type_manager, $entity, $fields, $delta) {  
-  $suffix_terms = $entity->get('field_name_suffix')->referencedEntities();
-  $suffix_term = reset($suffix_terms);
-  $value = $entity->field_first_name->value
-    . " " . $entity->field_middle_name->value
-    . " " . $entity->field_last_name->value
+function computed_field_field_full_name_compute($entity_type_manager, $entity, $fields, $delta) {
+  $suffix_term = NULL;
+  if ($entity->hasField('field_name_suffix')) {
+    $suffix_terms = $entity->get('field_name_suffix')->referencedEntities();
+    $suffix_term = reset($suffix_terms);
+  }
+  $names = [];
+  $name_fields = ['field_first_name', 'field_middle_name', 'field_last_name'];
+  foreach ($name_fields as $name_field) {
+    if ($entity->hasField($name_field)) {
+      $names[] = $entity->get($name_field)->value;
+    }
+  }
+  $value = implode(" ", $names)
     . ($suffix_term ? " " . $suffix_term->label() : '');
 
   return $value;
 }
 
 function computed_field_field_proper_full_name_compute($entity_type_manager, $entity, $fields, $delta) {
-  $prefix_terms = $entity->get('field_name_prefix')->referencedEntities();
-  $prefix_term = reset($prefix_terms);
-  $suffix_terms = $entity->get('field_name_suffix')->referencedEntities();
-  $suffix_term = reset($suffix_terms);
+  $prefix_term = NULL;
+  if ($entity->hasField('field_name_prefix')) {
+    $prefix_terms = $entity->get('field_name_prefix')->referencedEntities();
+    $prefix_term = reset($prefix_terms);
+  }
+
+  $suffix_term = NULL;
+  if ($entity->hasField('field_name_suffix')) {
+    $suffix_terms = $entity->get('field_name_suffix')->referencedEntities();
+    $suffix_term = reset($suffix_terms);
+  }
   $value = ($prefix_term ? $prefix_term->label() . " " : '')
     . $entity->field_first_name->value
     . " " . $entity->field_middle_name->value
@@ -47,12 +62,29 @@ function computed_field_field_contact_full_name_compute($entity_type_manager, $e
 }
 
 function computed_field_field_full_contact_details_compute($entity_type_manager, $entity, $fields, $delta) {
-  $value = "{$entity->field_contact_first_name->value} {$entity->field_contact_last_name->value}"
-    . ($entity->field_contact_phone_number->value ? ", {$entity->field_contact_phone_number->value}" : '')
-    . ($entity->field_contact_email->value ? ", {$entity->field_contact_email->value}" : '')
-    . ($entity->field_contact_website->value ? ", {$entity->field_contact_website->value}" : '');
+  $names = [];
+  if ($entity->hasField('field_contact_first_name')) {
+    $names[] = $entity->field_contact_first_name->value;
+  }
+  if ($entity->hasField('field_contact_last_name')) {
+    $names[] = $entity->field_contact_last_name->value;
+  }
+  $name = implode(' ', $names);
 
-  return $value;
+  $values = [$name];
+
+  $fields = [
+    'field_contact_phone_number',
+    'field_contact_email',
+    'field_contact_website',
+    'field_contact_address',
+  ];
+  foreach ($fields as $index => $field) {
+    if (!empty($entity->$field->value)) {
+      $values[] = $entity->$field->value;
+    }
+  }
+  return implode(', ', $values);
 }
 
 function computed_field_field_categories_compute($entity_type_manager, $entity, $fields, $delta) {
