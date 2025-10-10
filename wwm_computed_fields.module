@@ -29,7 +29,7 @@ function computed_field_field_full_name_compute($entity_type_manager, $entity, $
     }
   }
   $value = implode(" ", $names)
-    . ($suffix_term ? " " . $suffix_term->label() : '');
+    . ($suffix_term ? " " . $suffix_term->label() : '');  // careful: this is a non-breaking space
 
   return $value;
 }
