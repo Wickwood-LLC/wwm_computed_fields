@@ -17,6 +17,10 @@ function computed_field_field_age_compute($entity_type_manager, $entity, $fields
 
 function computed_field_field_full_name_compute($entity_type_manager, $entity, $fields, $delta) {
   $suffix_term = NULL;
+  if ($entity->hasField('field_name_prefix')) {
+    $prefix_terms = $entity->get('field_name_prefix')->referencedEntities();
+    $prefix_term = reset($prefix_terms);
+  }
   if ($entity->hasField('field_name_suffix')) {
     $suffix_terms = $entity->get('field_name_suffix')->referencedEntities();
     $suffix_term = reset($suffix_terms);
@@ -28,7 +32,8 @@ function computed_field_field_full_name_compute($entity_type_manager, $entity, $
       $names[] = $entity->get($name_field)->value;
     }
   }
-  $value = implode(" ", $names)
+  $value = ($prefix_term ? $prefix_term->label() . " " : '')  // careful: this is a non-breaking space
+    . implode(" ", $names)
     . ($suffix_term ? " " . $suffix_term->label() : '');  // careful: this is a non-breaking space
 
   return $value;
