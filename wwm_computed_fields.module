@@ -5,7 +5,8 @@ use Drupal\node\NodeInterface;
 /**
  * Computed Field Functions.
  */
-function computed_field_field_age_compute($entity_type_manager, $entity, $fields, $delta) {  
+function computed_field_field_age_compute($entity_type_manager, $entity, $fields, $delta)
+{
   if ($entity->field_birthdate->value) {
     $birthdate = date_create_from_format('Y-m-d', date($entity->field_birthdate->value));
     $today = date_create_from_format('Y-m-d', date('Y-m-d'));
@@ -13,9 +14,12 @@ function computed_field_field_age_compute($entity_type_manager, $entity, $fields
     $value = $diff['y'];
     return $value;
   }
+  return '';
 }
 
-function computed_field_field_full_name_compute($entity_type_manager, $entity, $fields, $delta) {
+function computed_field_field_full_name_compute($entity_type_manager, $entity, $fields, $delta)
+{
+  $prefix_term = NULL;
   $suffix_term = NULL;
   if ($entity->hasField('field_name_prefix')) {
     $prefix_terms = $entity->get('field_name_prefix')->referencedEntities();
@@ -28,18 +32,19 @@ function computed_field_field_full_name_compute($entity_type_manager, $entity, $
   $names = [];
   $name_fields = ['field_first_name', 'field_middle_name', 'field_last_name'];
   foreach ($name_fields as $name_field) {
-    if ($entity->hasField($name_field)) {
+    if ($entity->hasField($name_field) && !empty($entity->get($name_field)->value)) {
       $names[] = $entity->get($name_field)->value;
     }
   }
-  $value = ($prefix_term ? $prefix_term->label() . " " : '')  // careful: this is a non-breaking space
+  $value = ($prefix_term ? $prefix_term->label() . " " : '')
     . implode(" ", $names)
-    . ($suffix_term ? " " . $suffix_term->label() : '');  // careful: this is a non-breaking space
+    . ($suffix_term ? " " . $suffix_term->label() : '');
 
-  return $value;
+  return $value ?: '';
 }
 
-function computed_field_field_proper_full_name_compute($entity_type_manager, $entity, $fields, $delta) {
+function computed_field_field_proper_full_name_compute($entity_type_manager, $entity, $fields, $delta)
+{
   $prefix_term = NULL;
   if ($entity->hasField('field_name_prefix')) {
     $prefix_terms = $entity->get('field_name_prefix')->referencedEntities();
@@ -51,22 +56,40 @@ function computed_field_field_proper_full_name_compute($entity_type_manager, $en
     $suffix_terms = $entity->get('field_name_suffix')->referencedEntities();
     $suffix_term = reset($suffix_terms);
   }
+  $names = [];
+  if ($entity->hasField('field_first_name') && !empty($entity->field_first_name->value)) {
+    $names[] = $entity->field_first_name->value;
+  }
+  if ($entity->hasField('field_middle_name') && !empty($entity->field_middle_name->value)) {
+    $names[] = $entity->field_middle_name->value;
+  }
+  if ($entity->hasField('field_last_name') && !empty($entity->field_last_name->value)) {
+    $names[] = $entity->field_last_name->value;
+  }
   $value = ($prefix_term ? $prefix_term->label() . " " : '')
-    . $entity->field_first_name->value
-    . " " . $entity->field_middle_name->value
-    . " " . $entity->field_last_name->value
+    . implode(" ", $names)
     . ($suffix_term ? " " . $suffix_term->label() : '');
 
-  return $value;
+  return $value ?: '';
 }
 
 // This function computes for the "Contact Full Name", which is used for the Contact Paragraph. This is different from the "Full Name", which is used for the User entity.
-function computed_field_field_contact_full_name_compute($entity_type_manager, $entity, $fields, $delta) {  
-  $value = "{$entity->field_contact_first_name->value} {$entity->field_contact_last_name->value}";
-  return $value;
+function computed_field_field_contact_full_name_compute($entity_type_manager, $entity, $fields, $delta)
+{
+  $first = '';
+  $last = '';
+  if ($entity->hasField('field_contact_first_name') && !empty($entity->field_contact_first_name->value)) {
+    $first = $entity->field_contact_first_name->value;
+  }
+  if ($entity->hasField('field_contact_last_name') && !empty($entity->field_contact_last_name->value)) {
+    $last = $entity->field_contact_last_name->value;
+  }
+  $value = trim($first . ' ' . $last);
+  return $value ?: '';
 }
 
-function computed_field_field_full_contact_details_compute($entity_type_manager, $entity, $fields, $delta) {
+function computed_field_field_full_contact_details_compute($entity_type_manager, $entity, $fields, $delta)
+{
   $names = [];
   if ($entity->hasField('field_contact_first_name')) {
     $names[] = $entity->field_contact_first_name->value;
@@ -92,7 +115,8 @@ function computed_field_field_full_contact_details_compute($entity_type_manager,
   return implode(', ', $values);
 }
 
-function computed_field_field_categories_compute($entity_type_manager, $entity, $fields, $delta) {
+function computed_field_field_categories_compute($entity_type_manager, $entity, $fields, $delta)
+{
 
   $tids = array();
 
@@ -117,7 +141,8 @@ function computed_field_field_categories_compute($entity_type_manager, $entity, 
 /**
  * Implements hook_ENTITY_TYPE_presave()
  */
-function wwm_computed_fields_node_presave(NodeInterface $node) {
+function wwm_computed_fields_node_presave(NodeInterface $node)
+{
   if ($node->hasField('field_primary_category') && $node->hasField('field_additional_categories') && $node->hasField('field_categories')) {
     $primary_categories = $node->get('field_primary_category')->getValue();
     $additional_categories = $node->get('field_additional_categories')->getValue();
